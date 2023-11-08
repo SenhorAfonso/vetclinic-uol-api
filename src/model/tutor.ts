@@ -35,10 +35,13 @@ export const tutorSchema = new mongoose.Schema({
         maxlength: [8, 'Zipcode can not be more than 8 characters'],
         match: [/\d{8}/, 'Please fill a valid zipcode']
     },
-    pets: {
-        type: mongoose.Types.ObjectId,
-        ref: petSchema
-    }
+    pets: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: petSchema
+        }
+    ]
+    
 })
 
 export default mongoose.model('tutorModel', tutorSchema);
