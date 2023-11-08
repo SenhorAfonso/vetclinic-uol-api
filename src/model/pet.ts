@@ -28,4 +28,4 @@ export const petSchema = new mongoose.Schema({
     }
 })
 
-export default mongoose.model('tutorModel', petSchema);
+export default mongoose.model('petModel', petSchema);

@@ -2,36 +2,24 @@
 import express from 'express';
 const router = express.Router();
 
+const { getAllTutors, createNewTutor, updateTutor, deleteTutor, createNewPet, updatePet, deletePet } = require('../controller/vetclinic')
+
 router.get('/', (req, res) => {
     res.send('home');
 })
 
-router.get('/tutors', (req, res) => {
-    res.send('Retrieve all tutors!');
-})
+router.get('/tutors', getAllTutors)
 
-router.post('/tutor', (req, res) => {
-    res.send('Create a new tutor');
-})
+router.post('/tutor', createNewTutor)
 
-router.put('/tutor/:id', (req, res) => {
-    res.send('Updates a tutor');
-})
+router.put('/tutor/:id', updateTutor)
 
-router.delete('/tutor/:id', (req, res) => {
-    res.send('Delete a tutor');
-})
+router.delete('/tutor/:id', deleteTutor)
 
-router.post('/pet/:tutorId', (req, res) => {
-    res.send('Creates a pet and adds it to a tutor');
-})
+router.post('/pet/:tutorId', createNewPet)
 
-router.put('/pet/:petId/tutor/:tutorId', (req, res) => {
-    res.send('Updates a pets info');
-})
+router.put('/pet/:petId/tutor/:tutorId', updatePet)
 
-router.delete('/pet/:petId/tutor/:tutorId', (req, res) => {
-    res.send('Deletes a pet from a tutor');
-})
+router.delete('/pet/:petId/tutor/:tutorId', deletePet)
 
 export = router;
