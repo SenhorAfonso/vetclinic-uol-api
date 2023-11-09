@@ -28,16 +28,16 @@ async function createNewTutor(req: Request, res: Response) {
     let success: boolean = true;
     try {
         newTutor = await tutorModel.create(req.body);
+        res.status(201).send({success, data: newTutor})
     } catch (err) {
         success = false;
         if (err instanceof Error.ValidationError) {
-            console.log(err.message);
+            res.status(500).json({falha: "falha"});
         } else {
-            console.log(err)
+            res.status(500).json({falha: "falha"});
         }
     } 
     
-    res.send({success, data: newTutor})
     
 }
 
@@ -58,27 +58,34 @@ async function updateTutor(req: Request, res: Response) {
         );
 
         if (updatedTutor) {
-            res.json({success, data: updatedTutor})
+            res.status(200).json({success, data: updatedTutor})
+
         } else {
             success = false;
             msg = `There is no tutor with id = ${tutorId}`;
             res.status(404).json({ success, msg });
+            console.log('caiu aqui')
+
         }
     } catch (err) {
         success = false;
         if (err instanceof Error.ValidationError) {
             msg = `Field validation error: ${err.message}`;
-            res.json({ success, msg });
-
+            res.status(500).json({ success, msg });
+            console.log(err.message)
+            console.log('erro 1');
+            
         } else if (err instanceof Error.CastError) {
             msg = `The ID ${tutorId} is not compatible with type ObjectId`;
-            res.json({ success, msg });
+            res.status(500).json({ success, msg });
+            console.log('erro 2');
 
         }
     }
 
 }
 
+// TESTADO
 async function deleteTutor(req: Request, res: Response) {
 
     const tutorId = req.params.id;
@@ -100,7 +107,7 @@ async function deleteTutor(req: Request, res: Response) {
     } catch (err) {
         if (err instanceof Error.CastError) {
             msg = `The ID ${tutorId} (${typeof tutorId}) is not compatible with type ObjectId`
-            return res.json({success, msg})
+            res.status(500).json({success, msg})
         }
     }
 
@@ -122,30 +129,33 @@ async function createNewPet(req: Request, res: Response) {
                     newPet = await petModel.create(req.body);
                     doc.pets.push(newPet);
                     doc.save();
+                    res.status(201).json({success, data: newPet});
+                    return doc;
                 } else {
                     success = false;
                     msg = `There is no tutor with id = ${req.params.tutorId}`
-                    res.json({success, msg})
+                    res.status(404).json({success, msg})
                     
                 }})
                 .catch ((err: any)=> {
                     success = false;
                     if (err instanceof Error.ValidationError) {
                         msg = `Field validation error: ${err.message}`
-                        return res.json({success, msg})
+                        res.status(500).json({success, msg})
                     } else if (err instanceof Error.CastError) {
                         msg = `The ID ${req.params.tutorId} (${typeof req.params.tutorId}) is not compatible with type ObjectId`
                         return res.json({success, msg})
                     } else {
-                        res.json({"deu ruim": "Muito"})
+                        res.status(500).json({"deu ruim": "Muito"})
                     }
-            }) 
+                }) 
 
     } catch (err: any) {
         success = false;
+        res.status(500).json({success})
     }
 
-    res.json({success, data: newPet});
+    
 
 }
 
@@ -179,11 +189,11 @@ async function updatePet(req: Request, res: Response) {
         success = false;
         if (err instanceof Error.ValidationError) {
             msg = `Field validation error: ${err.message}`;
-            res.json({ success, msg });
+            res.status(500).json({ success, msg });
 
         } else if (err instanceof Error.CastError) {
             msg = `The ID ${petId} is not compatible with type ObjectId`;
-            res.json({ success, msg });
+            res.status(500).json({ success, msg });
 
         }
     }   
@@ -207,7 +217,7 @@ async function deletePet(req: Request, res: Response) {
                 { $pull: { pets: deletedPet } },
                 { new: true }
             );
-            res.json({success, deletedPet});
+            res.status(410).json({success, deletedPet});
 
         } else {
             success = false;
@@ -219,7 +229,7 @@ async function deletePet(req: Request, res: Response) {
     } catch (err) {
         if (err instanceof Error.CastError) {
             msg = `The ID ${req.params.tutorId} (${typeof req.params.tutorId}) is not compatible with type ObjectId`
-            return res.json({success, msg})
+            res.status(500).json({success, msg})
         }
     }
 }

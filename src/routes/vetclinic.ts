@@ -8,6 +8,8 @@ router.get('/', (req, res) => {
     res.send('home');
 })
 
+// /api/v1/vetclinic
+
 router.get('/tutors', getAllTutors)
 
 router.post('/tutor', createNewTutor)
