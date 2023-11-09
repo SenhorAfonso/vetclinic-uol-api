@@ -25,13 +25,11 @@ export const petSchema = new mongoose.Schema({
         required: [true, "Must provide a pet's weight"],
     },
     date_of_birth: {
-        type: Date,
+        type: String,
         required: [true, 'Must provide a birth date'],
         trim: true,
         match: [/\d{4}\-\d{2}\-\d{2}\s\d{2}\:\d{2}/, 'Please fill a valid birth date']
     }
 })
-
-
 
 export default mongoose.model('petModel', petSchema);
