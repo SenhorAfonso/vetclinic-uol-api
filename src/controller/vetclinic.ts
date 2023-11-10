@@ -6,6 +6,7 @@ import mongoose, { Error, Mongoose } from "mongoose";
 import { error } from "console";
 import tutor from "../model/tutor";
 
+// TESTADO
 async function getAllTutors(req: Request, res: Response) {
     console.clear()
     let success: boolean = true;
@@ -22,25 +23,40 @@ async function getAllTutors(req: Request, res: Response) {
     
 };
 
+// TESTADO
 async function createNewTutor(req: Request, res: Response) {
-    console.clear()
-    let newTutor: object = {};
+
     let success: boolean = true;
+    let msg: string = '';
+    let status: number = 0;
+    let newTutor: object = {};
+
     try {
         newTutor = await tutorModel.create(req.body);
-        res.status(201).send({success, data: newTutor})
+        msg = `Created object`;
+        status = 201;
+
     } catch (err) {
         success = false;
         if (err instanceof Error.ValidationError) {
-            res.status(500).json({falha: "falha"});
+            msg = `Field validation error: ${err.message}`;
+            status = 500;
         } else {
-            res.status(500).json({falha: "falha"});
+            status = 500;
         }
     } 
+
+    res.status(status).json({success, msg, data: newTutor})
+
+    
+
+
+
     
     
 }
 
+// TESTADO
 async function updateTutor(req: Request, res: Response) {
     console.clear()
 
@@ -113,11 +129,11 @@ async function deleteTutor(req: Request, res: Response) {
 
 }
 
+// TESTADO
 async function createNewPet(req: Request, res: Response) {
     console.clear()
     let newPet: object = {};
     let success: boolean = true;
-    let tutor: object | null = {};
     let msg: string;
     console.log(req.body)
     
@@ -144,10 +160,8 @@ async function createNewPet(req: Request, res: Response) {
                         res.status(500).json({success, msg})
                     } else if (err instanceof Error.CastError) {
                         msg = `The ID ${req.params.tutorId} (${typeof req.params.tutorId}) is not compatible with type ObjectId`
-                        return res.json({success, msg})
-                    } else {
-                        res.status(500).json({"deu ruim": "Muito"})
-                    }
+                        res.status(500).json({success, msg})
+                    } 
                 }) 
 
     } catch (err: any) {
@@ -159,8 +173,8 @@ async function createNewPet(req: Request, res: Response) {
 
 }
 
+// TESTADO
 async function updatePet(req: Request, res: Response) {
-    console.clear();
 
     const petId = req.params.petId; 
     const tutorId = req.params.tutorId; 
@@ -171,6 +185,7 @@ async function updatePet(req: Request, res: Response) {
 
     try {
         
+        console.log('oi')
         const updatedPet = await petModel.findByIdAndUpdate(
             petId,
             newPetInfo,
@@ -190,15 +205,17 @@ async function updatePet(req: Request, res: Response) {
         if (err instanceof Error.ValidationError) {
             msg = `Field validation error: ${err.message}`;
             res.status(500).json({ success, msg });
-
+            console.log('erro 1')
+            
         } else if (err instanceof Error.CastError) {
             msg = `The ID ${petId} is not compatible with type ObjectId`;
             res.status(500).json({ success, msg });
-
+            console.log('erro 2')
         }
     }   
 }
 
+// TESTADO
 async function deletePet(req: Request, res: Response) {
     console.clear()
 
