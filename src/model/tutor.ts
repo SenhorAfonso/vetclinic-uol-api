@@ -8,6 +8,7 @@ export const tutorSchema = new mongoose.Schema({
         required: [true, 'Must provide a name'],
         trim: true,
         maxlength: [55, 'Name can not be more than 55 characters']
+
     },
     phone: {
         type: String,
@@ -22,12 +23,14 @@ export const tutorSchema = new mongoose.Schema({
         required: [true, 'Must provide a email address'],
         trim: true,
         match: [/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, 'Please fill a valid email address']
+
     },
     date_of_birth: {
         type: String,
         required: [true, 'Must provide a birth date'],
         trim: true,
         match: [/\d{4}\-\d{2}\-\d{2}\s\d{2}\:\d{2}/, 'Please fill a valid birth date']
+
     },
     zipcode: {
         type: String,
@@ -35,6 +38,7 @@ export const tutorSchema = new mongoose.Schema({
         trim: true,
         maxlength: [8, 'Zipcode can not be more than 8 characters'],
         match: [/\d{8}/, 'Please fill a valid zipcode']
+        
     },
     pets: [petSchema]
     
