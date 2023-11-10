@@ -1,18 +1,20 @@
 import mongoose from 'mongoose';
 
+
+
 export const petSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Must provide a name for the pet'],
         trim: true,
-        maxlenght: [55, 'Name can not be more than 55 characters'],
+        maxlength: [55, 'Name can not be more than 55 characters'],
 
     },
     species: {
         type: String,
         required: [true, 'Must provide a species for the pet'],
         trim: true,
-        maxlenght: [55, 'Name can not be more than 55 characters']
+        maxlength: [55, 'Name can not be more than 55 characters']
 
     },
     carry: {

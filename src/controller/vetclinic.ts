@@ -19,7 +19,7 @@ async function getAllTutors(req: Request, res: Response) {
         res.status(500).json({success, data: tutors});
     }
 
-    res.status(200).json({success, data: tutors});
+    res.status(200).json({success, tutors: tutors ?? {}});
     
 };
 
@@ -46,134 +46,155 @@ async function createNewTutor(req: Request, res: Response) {
         }
     } 
 
-    res.status(status).json({success, msg, data: newTutor})
+    res.status(status).json({success, msg, newTutor: newTutor ?? {}})
 
-    
-
-
-
-    
     
 }
 
 // TESTADO
 async function updateTutor(req: Request, res: Response) {
-    console.clear()
-
     const {id: tutorId} = req.params;
     const newTutorInfo = req.body;
 
     let success: boolean = true;
-    let msg: string;
+    let msg: string = '';
+    let status: number = 0;
+    let updatedTutor: object | null = {};
 
     try {
-        const updatedTutor = await tutorModel.findByIdAndUpdate(
+        updatedTutor = await tutorModel.findByIdAndUpdate(
             tutorId,
             newTutorInfo,
             {new: true, runValidators: true}
         );
 
         if (updatedTutor) {
-            res.status(200).json({success, data: updatedTutor})
+            status = 200;
+            msg = 'Created object.';
 
         } else {
             success = false;
             msg = `There is no tutor with id = ${tutorId}`;
-            res.status(404).json({ success, msg });
-            console.log('caiu aqui')
+            status = 404;
 
         }
     } catch (err) {
         success = false;
         if (err instanceof Error.ValidationError) {
             msg = `Field validation error: ${err.message}`;
-            res.status(500).json({ success, msg });
-            console.log(err.message)
-            console.log('erro 1');
+            status = 500;
             
         } else if (err instanceof Error.CastError) {
             msg = `The ID ${tutorId} is not compatible with type ObjectId`;
-            res.status(500).json({ success, msg });
-            console.log('erro 2');
+            status = 500;
 
         }
     }
+
+    res.status(status).json({success, msg, updatedTutor: updatedTutor ?? {}})
 
 }
 
 // TESTADO
 async function deleteTutor(req: Request, res: Response) {
-
     const tutorId = req.params.id;
 
-    let msg: string;
+    let msg: string = '';
+    let status: number = 0;
     let success: boolean = true;
+    let deletedTutor: object | null = {};
+
 
     try {
-        const deletedTutor = await tutorModel.findOneAndDelete({_id: tutorId});
+        deletedTutor = await tutorModel.findOneAndDelete({_id: tutorId});
 
         if (deletedTutor) {
-            res.status(200).json({success, deletedTutor});
+            status = 200;
+            msg = 'Deleted object';
+
         } else {
             success = false;
             msg = `There is no tutor with id = ${tutorId}`;
-            res.status(404).json({success, msg})
+            status = 404;
+
         }
 
     } catch (err) {
         if (err instanceof Error.CastError) {
-            msg = `The ID ${tutorId} (${typeof tutorId}) is not compatible with type ObjectId`
-            res.status(500).json({success, msg})
+            msg = `The ID ${tutorId} (${typeof tutorId}) is not compatible with type ObjectId`;
+            status = 500;
+
+        } else {
+            status = 500
+            msg =  `${err}`
         }
     }
+
+    res.status(status).json({success, msg, dadeletedTutorta: deletedTutor ?? {}})
+
 
 }
 
 // TESTADO
 async function createNewPet(req: Request, res: Response) {
-    console.clear()
-    let newPet: object = {};
+
     let success: boolean = true;
-    let msg: string;
-    console.log(req.body)
+    let msg: string = '';
+    let newPet: object | null = {};
+    let status: number = 0;
     
     try {
-
         await tutorModel.findById(req.params.tutorId)
             .then(async (doc) => {
                 if (doc) {
-                    newPet = await petModel.create(req.body);
-                    doc.pets.push(newPet);
-                    doc.save();
-                    res.status(201).json({success, data: newPet});
-                    return doc;
+                    try {
+                        console.log(req.body)
+                        newPet = await petModel.create(req.body);
+                        doc.pets.push(newPet);
+                        doc.save();
+                        msg = 'Created object';
+                        status = 201;
+                    } catch (err) {
+                        if (err instanceof Error.ValidationError) {
+                            msg = `Field validation error: ${err.message}`;
+                            status = 500;
+
+                        } else {
+                            status = 500;
+                            msg = `${err}`
+
+                        }
+                    }
                 } else {
                     success = false;
                     msg = `There is no tutor with id = ${req.params.tutorId}`
-                    res.status(404).json({success, msg})
+                    status = 404;
                     
                 }})
                 .catch ((err: any)=> {
                     success = false;
                     if (err instanceof Error.ValidationError) {
                         msg = `Field validation error: ${err.message}`
-                        res.status(500).json({success, msg})
+                        status = 500;
+
                     } else if (err instanceof Error.CastError) {
                         msg = `The ID ${req.params.tutorId} (${typeof req.params.tutorId}) is not compatible with type ObjectId`
-                        res.status(500).json({success, msg})
+                        status = 500;
+
                     } 
                 }) 
 
     } catch (err: any) {
         success = false;
-        res.status(500).json({success})
+        status = 500
+        msg = `${err}`
     }
-
     
-
+    res.status(status).json({success, msg, newPet: newPet ?? {}})
 }
 
-// TESTADO
+// ATUALIZAR O PET DE DENTRO DO TUTOR
+// primeiro achar o tutor, depois atualizar o pet e só no fim atualizar o tutor
 async function updatePet(req: Request, res: Response) {
 
     const petId = req.params.petId; 
@@ -181,74 +202,88 @@ async function updatePet(req: Request, res: Response) {
     const newPetInfo = req.body;
 
     let success: boolean = true;
-    let msg: string;
+    let msg: string = '';
+    let status: number = 0;
+    let updatedPet: object | null = {};
 
     try {
-        
-        console.log('oi')
-        const updatedPet = await petModel.findByIdAndUpdate(
+        updatedPet = await petModel.findByIdAndUpdate(
             petId,
             newPetInfo,
             {new: true, runValidators: true}
         )
 
         if (updatedPet) {
-            res.status(200).json({success, data: updatedPet})
+
+            status = 200;
+            
         } else {
             success = false;
             msg = `There is no pet with id = ${petId}`;
-            res.status(404).json({ success, msg });
+            status = 404;
+            
         }
 
     } catch (err) {
         success = false;
         if (err instanceof Error.ValidationError) {
             msg = `Field validation error: ${err.message}`;
-            res.status(500).json({ success, msg });
-            console.log('erro 1')
+            status = 500;
             
         } else if (err instanceof Error.CastError) {
             msg = `The ID ${petId} is not compatible with type ObjectId`;
-            res.status(500).json({ success, msg });
-            console.log('erro 2')
+            status = 500;
         }
     }   
+
+    res.status(status).json({success, status, updatedPet: updatedPet ?? {}})
+
 }
 
 // TESTADO
 async function deletePet(req: Request, res: Response) {
-    console.clear()
-
     const petId = req.params.petId;
     const tutorId = req.params.tutorId;
 
-    let msg: string;
+    let status: number = 0;
+    let msg: string = '';
     let success: boolean = true;
-
+    let deletedPet: object | null = {};
+    let tutorToUpdate: any;
+    
     try {
-        const deletedPet = await petModel.findOneAndDelete({_id: petId});
+        tutorToUpdate = tutorModel.findById({_id: tutorId})
 
-        if (deletedPet) {
-            const updatedTutor = await tutorModel.findByIdAndUpdate(
-                tutorId,
-                { $pull: { pets: deletedPet } },
-                { new: true }
-            );
-            res.status(410).json({success, deletedPet});
+        if (tutorToUpdate) {
+            deletedPet = await petModel.findOneAndDelete({_id: petId});
+
+            if (deletedPet) {
+                tutorToUpdate = await tutorModel.findByIdAndUpdate(
+                    tutorId,
+                    { $pull: { pets: deletedPet } },
+                    { new: true });
+
+                status = 200;
+
+            } else {
+                status = 404;
+                msg = `There is no pet with id = ${petId}`
+
+            }
 
         } else {
-            success = false;
-            msg = `There is no pet with id ${petId}`;
-            res.status(404).json({success, msg});
+            status = 404;
+            msg = `There is no tutor with id = ${tutorId}`
 
         }
 
     } catch (err) {
         if (err instanceof Error.CastError) {
-            msg = `The ID ${req.params.tutorId} (${typeof req.params.tutorId}) is not compatible with type ObjectId`
-            res.status(500).json({success, msg})
+            msg = `The ID ${tutorId} (${typeof tutorId}) is not compatible with type ObjectId`
+            status = 500;
         }
     }
+    res.status(status).json({success, msg, status, deletedPet: deletedPet ?? {}})
 }
 
 module.exports = { getAllTutors, createNewTutor, updateTutor, deleteTutor, createNewPet, updatePet, deletePet }

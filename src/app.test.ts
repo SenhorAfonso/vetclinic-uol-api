@@ -61,21 +61,22 @@ describe('UPDATE TUTOR', () => {
                 "zipcode": "20031006"
             });
             
-            if (tutorToUpdate.body.data) {
-                const tutorId = tutorToUpdate.body.data._id;
+        if (tutorToUpdate.body.newTutor) {
+            const tutorId = tutorToUpdate.body.newTutor._id;
 
-                const res = await request(app)
-                    .put(`/api/v1/vetclinic/tutor/${tutorId}`)
-                    .send({
-                        "name": "Pedro Afonso",
-                    })
+            const res = await request(app)
+                .put(`/api/v1/vetclinic/tutor/${tutorId}`)
+                .send({
+                    "name": "Pedro Afonso",
+                })
 
-                expect(res.statusCode).toBe(200)
+            expect(res.statusCode).toBe(200)
 
-            } else {
-                throw new Error('Error creating new tutor');
+        } else {
 
-            }
+            throw new Error(String(tutorToUpdate.body.newTutor));
+
+        }
 
     })
 
