@@ -1,14 +1,11 @@
+import { getAllTutors, createNewTutor, updateTutor, deleteTutor, createNewPet, updatePet, deletePet } from '../controller/vetclinic'
 
-import express from 'express';
-const router = express.Router();
-
-const { getAllTutors, createNewTutor, updateTutor, deleteTutor, createNewPet, updatePet, deletePet } = require('../controller/vetclinic')
+import express from 'express'
+const router = express.Router()
 
 router.get('/', (req, res) => {
-    res.send('home');
+  res.send('home')
 })
-
-// /api/v1/vetclinic
 
 router.get('/tutors', getAllTutors)
 
@@ -24,4 +21,4 @@ router.put('/pet/:petId/tutor/:tutorId', updatePet)
 
 router.delete('/pet/:petId/tutor/:tutorId', deletePet)
 
-export = router;
+export = router
