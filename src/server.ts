@@ -1,22 +1,27 @@
-import express from 'express';
+import express from 'express'
 import router from './routes/vetclinic'
 import dotenv from 'dotenv'
 import connectDB from './db/connect'
 
-const app = express();
+const app = express()
 
 app.use(express.json())
-app.use('/api/v1/vetclinic', router);
+app.use('/api/v1/vetclinic', router)
 
-async function start(): Promise<void> {
-    try {
-        dotenv.config()
-        await connectDB(process.env.MONGO_URL!);
-    } catch (err) {
-        console.log(err);
+async function start (): Promise<void> {
+  try {
+    dotenv.config()
+    if (process.env.MONGO_URL != null) {
+      await connectDB(process.env.MONGO_URL)
     }
+  } catch (err) {
+    console.log(err)
+  }
 }
 
-start();
+start()
+  .catch((err: any) => {
+    console.log(err)
+  })
 
-export = app;
+export = app

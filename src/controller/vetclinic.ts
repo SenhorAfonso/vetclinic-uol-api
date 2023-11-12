@@ -63,7 +63,7 @@ async function updateTutor (req: Request, res: Response): Promise<void> {
 
     if (updatedTutor != null) {
       status = 200
-      msg = 'Created object.'
+      msg = 'Updated object.'
     } else {
       success = false
       msg = `There is no tutor with id = ${tutorId}`
@@ -201,6 +201,9 @@ async function updatePet (req: Request, res: Response): Promise<void> {
           tutorId,
           { $push: { pets: updatedPet } },
           { new: true })
+
+        status = 200
+        msg = 'Updated pet'
       } else {
         status = 404
         msg = `There is no pet with id ${petId}`
@@ -247,6 +250,7 @@ async function deletePet (req: Request, res: Response): Promise<void> {
           { new: true })
 
         status = 200
+        msg = 'Deleted object'
       } else {
         success = false
         status = 404

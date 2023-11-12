@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { getAllTutors, createNewTutor, updateTutor, deleteTutor, createNewPet, updatePet, deletePet } from '../controller/vetclinic'
 
 import express from 'express'

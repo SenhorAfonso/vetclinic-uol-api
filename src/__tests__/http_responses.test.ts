@@ -1,6 +1,6 @@
 import request from 'supertest'
-import app from './server'
-import tutor from './model/tutor'
+import app from '../server'
+import tutor from '../model/tutor'
 import mongoose from 'mongoose'
 
 console.clear()
@@ -78,7 +78,7 @@ describe('UPDATE TUTOR', () => {
     expect(res.statusCode).toBe(404)
   })
 
-  it('Id format is invalid. Should return 500 status code', async () => {
+  it("Tutor's id format is invalid. Should return 500 status code", async () => {
     const res = await request(app)
       .put('/api/v1/vetclinic/tutor/<invalidId>')
       .send({
@@ -100,7 +100,7 @@ describe('UPDATE TUTOR', () => {
 })
 
 describe('CREATE PET', () => {
-  it('Should respond with 201 status code', async () => {
+  it("Both tutor's id and pet's body data are valid. Should respond with 201 status code", async () => {
     const tutor = await request(app).post('/api/v1/vetclinic/tutor').send({
       name: 'Pedro Afonso',
       phone: '12345678901',
@@ -124,7 +124,7 @@ describe('CREATE PET', () => {
     }
   })
 
-  it('Should respond with 500 status code', async () => {
+  it('Pet body data (carry field) is invalid. Should respond with 500 status code', async () => {
     const tutor = await request(app).post('/api/v1/vetclinic/tutor').send({
       name: 'Pedro Afonso',
       phone: '12345678901',
@@ -148,7 +148,7 @@ describe('CREATE PET', () => {
     }
   })
 
-  it('Should respond with 404 status code', async () => {
+  it("Tutor's id is valid but not associated with a record. Should respond with 404 status code", async () => {
     const res = await request(app).post('/api/v1/vetclinic/pet/12342c30d468d8bd485bb965').send({
       name: "Marquinhos d'Avilla",
       species: 'Bulldog',
@@ -160,7 +160,7 @@ describe('CREATE PET', () => {
     expect(res.statusCode).toBe(404)
   })
 
-  it('Should respond with 500 status code', async () => {
+  it("Tutor's id format are invalid. Should respond with 500 status code", async () => {
     const res = await request(app).post('/api/v1/vetclinic/pet/<invalidId>').send({
       name: "Marquinhos d'Avilla",
       species: 'Bulldog',
@@ -175,7 +175,7 @@ describe('CREATE PET', () => {
 
 describe('UPDATE PET', () => {
   // update pet valid
-  it('Should respond with 200 status code', async () => {
+  it("Both tutor's id and pet's body data are valid. Should respond with 200 status code", async () => {
     console.log('oi')
     const tutor = await request(app).post('/api/v1/vetclinic/tutor').send({
       name: 'Pedro Marques',
@@ -212,7 +212,7 @@ describe('UPDATE PET', () => {
     }
   })
 
-  it('Should respond with 404 status code', async () => {
+  it("Both tutor's and pet id are valid but not associated with a record. Should respond with 404 status code", async () => {
     const res = await request(app)
       .put('/api/v1/vetclinic/pet/12342c30d468d8bd485bb965/tutor/12342c30d468d8bd485bb965')
       .send({
@@ -222,7 +222,7 @@ describe('UPDATE PET', () => {
     expect(res.statusCode).toBe(404)
   })
 
-  it('Should respond with 500 status code', async () => {
+  it('Pet body data are invalid. Should respond with 500 status code', async () => {
     const res = await request(app)
       .put('/api/v1/vetclinic/pet/<invaliID>/tutor/12342c30d468d8bd485bb965')
       .send({
@@ -232,7 +232,7 @@ describe('UPDATE PET', () => {
     expect(res.statusCode).toBe(500)
   })
 
-  it('Should respond with 500 status code', async () => {
+  it("Tutor's id format are invalid. Should respond with 500 status code", async () => {
     const res = await request(app)
       .put('/api/v1/vetclinic/pet/<invaliID>/tutor/12342c30d468d8bd485bb965')
       .send({
@@ -243,9 +243,8 @@ describe('UPDATE PET', () => {
   })
 })
 
-describe('GET /api/v1/vetclinic', () => {
-  //  buscar todos os tutores
-  it('should respond with 200 status code', async () => {
+describe('RETRIVE ALL TUTORS', () => {
+  it('Should respond with 200 status code', async () => {
     const res = await request(app)
       .get('/api/v1/vetclinic')
 
@@ -254,7 +253,7 @@ describe('GET /api/v1/vetclinic', () => {
 })
 
 describe('DELETE TUTOR', () => {
-  it('Should respond with 200 status code', async () => {
+  it("Tutor's id to delete are valid. Should respond with 200 status code", async () => {
     const tutorToDelete = await tutor.create({
       name: 'Pedro Marques',
       phone: '12345678901',
@@ -273,16 +272,14 @@ describe('DELETE TUTOR', () => {
     }
   })
 
-  //  tentativa de telete com id valido e não cadastrado
-  it('Should respond with 404 status code', async () => {
+  it("Tutor's id to delete are valid but not associated with a record. Should respond with 404 status code", async () => {
     const res = await request(app)
       .delete('/api/v1/vetclinic/tutor/12342c30d468d8bd485bb965')
 
     expect(res.statusCode).toBe(404)
   })
 
-  //  tentativa de telete com id invalido e não cadastrado
-  it('Should respond with 404 status code', async () => {
+  it("Tutor's id format are invalid. Should respond with 500 status code", async () => {
     const res = await request(app)
       .delete('/api/v1/vetclinic/tutor/invalidId')
 
@@ -292,7 +289,7 @@ describe('DELETE TUTOR', () => {
 
 describe('DELETE PET', () => {
   // delete successfull
-  it('Should respond with 410 status code', async () => {
+  it("Both pet's id and tutor's are valid. Should respond with 410 status code", async () => {
     console.clear()
 
     const tutor = await request(app).post('/api/v1/vetclinic/tutor').send({
@@ -324,7 +321,7 @@ describe('DELETE PET', () => {
   })
 
   // id not found
-  it('Shoul respond with 404 status code', async () => {
+  it("Pet's id is valid but not associated with a record. Should respond with 404 status code", async () => {
     const tutor = await request(app).post('/api/v1/vetclinic/tutor').send({
       name: 'Pedro Marques',
       phone: '12345678901',
@@ -345,7 +342,6 @@ describe('DELETE PET', () => {
       })
 
       if (pet.body.data != null) {
-        const petId = pet.body.data._id
         const res = await request(app).delete(`/api/v1/vetclinic/pet/12342c30d468d8bd485bb965/tutor/${tutorId}`)
 
         expect(res.statusCode).toBe(404)
@@ -354,7 +350,7 @@ describe('DELETE PET', () => {
   })
 
   // id invalid
-  it('Shoul respond with 500 status code', async () => {
+  it("Pet's id format are invalid. Should respond with 500 status code", async () => {
     const tutor = await request(app).post('/api/v1/vetclinic/tutor').send({
       name: 'Pedro Marques',
       phone: '12345678901',
@@ -375,7 +371,6 @@ describe('DELETE PET', () => {
       })
 
       if (pet.body.data != null) {
-        const petId = pet.body.data._id
         const res = await request(app).delete('/api/v1/vetclinic/pet/<invalidId>/tutor/<invalidId>')
 
         expect(res.statusCode).toBe(500)
