@@ -128,7 +128,22 @@ async function createNewPet (req: Request, res: Response): Promise<void> {
       .then(async (doc) => {
         if (doc != null) {
           try {
+            if (req.body.carry === undefined) {
+              const petWeight: number = req.body.weight
+
+              if (petWeight < 10) {
+                req.body.carry = 'Small'
+              } else if (petWeight < 27) {
+                req.body.carry = 'Medium'
+              } else if (petWeight < 45) {
+                req.body.carry = 'Large'
+              } else {
+                req.body.carry = 'Giant'
+              }
+            }
+
             console.log(req.body)
+
             newPet = await petModel.create(req.body)
             doc.pets.push(newPet)
             await doc.save()

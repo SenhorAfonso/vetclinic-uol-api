@@ -14,14 +14,14 @@ async function start (): Promise<void> {
     if (process.env.MONGO_URL != null) {
       await connectDB(process.env.MONGO_URL)
     }
-  } catch (err) {
-    console.log(err)
+  } catch (err: any) {
+    console.log(`Error during database connection: ${err}`)
   }
 }
 
 start()
   .catch((err: any) => {
-    console.log(err)
+    console.log(`Error during database connection: ${err}`)
   })
 
 export = app
