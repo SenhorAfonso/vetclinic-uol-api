@@ -1,8 +1,7 @@
+import mongoose from 'mongoose'
 
-import mongoose from 'mongoose';
-
-function connectDB(url: string) {
-    return mongoose.connect(url);
+async function connectDB (url: string): Promise<typeof mongoose> {
+  return await mongoose.connect(url)
 }
 
-export = connectDB;
+export = connectDB
