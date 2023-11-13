@@ -8,13 +8,16 @@ You will notice the repository you cloned only have .ts files in a src folder. D
 First you'll have to run the npm install command to install all the project's dependencies, such as dotenv, express and mongoose. Without this all you have is a bunch of useless code.
 
 ## Connecting to database
-After ran the command you should have all the dependencies downloaded in the `node_modules` folder. But, before start our application you need to enter the `.env.example` file and change the <USERNAME> and <PASSWORD> placeholders to your own mongodb's user name and password. You can also use your localhost database. After, remember to rename `.env.example` to `.env`.
+After ran the command you should have all the dependencies downloaded in the `node_modules` folder. But, before start our application you need to enter the `.env.example` file and change the [USERNAME] and [PASSWORD] placeholders to your own mongodb's user name and password. You can also use your localhost database. After, remember to rename `.env.example` to `.env`.
 
 ## Transpiling the typescript folder
 All the application was wrote in TypeScript, you'll need to run `tsc -w` in the terminal in order to convert all TypeScript to JavaScript code, so node.js can execute this. When you make this you'll notice the command will not exit, you'll need to open a new terminal to run the next command.
 
 ## Running the application
 Finally, to start the application all you have to do is run `npm start` in the terminal and wait the "server listening" message to appear.
+
+## Running the test suit
+In order to run the test suits you have to execute the `npx jest __tests__/http_responses.test.ts` command.
 
 # How to use the vet-clinic API?
 
