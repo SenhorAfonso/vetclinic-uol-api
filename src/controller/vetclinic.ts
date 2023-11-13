@@ -2,25 +2,23 @@ import tutorModel from '../model/tutor'
 import petModel from '../model/pet'
 import { type Request, type Response } from 'express'
 import { Error } from 'mongoose'
-// import mongoose from 'mongoose'
 
-// TESTADO
 async function getAllTutors (req: Request, res: Response): Promise<void> {
-  console.clear()
   let success: boolean = true
   let tutors: object = {}
+  let status: number = 0
 
   try {
     tutors = await tutorModel.find({})
+    status = 200
   } catch (err: any) {
     success = false
-    res.status(500).json({ success, data: tutors })
+    status = 500
   }
 
-  res.status(200).json({ success, tutors: tutors ?? {} })
+  res.status(status).json({ success, tutors: tutors ?? {} })
 };
 
-// TESTADO
 async function createNewTutor (req: Request, res: Response): Promise<void> {
   let success: boolean = true
   let msg: string = ''
@@ -44,7 +42,6 @@ async function createNewTutor (req: Request, res: Response): Promise<void> {
   res.status(status).json({ success, msg, newTutor: newTutor ?? {} })
 }
 
-// TESTADO
 async function updateTutor (req: Request, res: Response): Promise<void> {
   const { id: tutorId } = req.params
   const newTutorInfo = req.body
@@ -83,7 +80,6 @@ async function updateTutor (req: Request, res: Response): Promise<void> {
   res.status(status).json({ success, msg, updatedTutor: updatedTutor ?? {} })
 }
 
-// TESTADO
 async function deleteTutor (req: Request, res: Response): Promise<void> {
   const tutorId = req.params.id
 
@@ -116,7 +112,6 @@ async function deleteTutor (req: Request, res: Response): Promise<void> {
   res.status(status).json({ success, msg, deletedTutor: deletedTutor ?? {} })
 }
 
-// TESTADO
 async function createNewPet (req: Request, res: Response): Promise<void> {
   let success: boolean = true
   let msg: string = ''
@@ -141,8 +136,6 @@ async function createNewPet (req: Request, res: Response): Promise<void> {
                 req.body.carry = 'Giant'
               }
             }
-
-            console.log(req.body)
 
             newPet = await petModel.create(req.body)
             doc.pets.push(newPet)
@@ -182,9 +175,7 @@ async function createNewPet (req: Request, res: Response): Promise<void> {
 
   res.status(status).json({ success, msg, newPet: newPet ?? {} })
 }
-// TESTADO
 async function updatePet (req: Request, res: Response): Promise<void> {
-  console.clear()
   const petId = req.params.petId
   const tutorId = req.params.tutorId
   const newPetInfo = req.body
@@ -195,8 +186,6 @@ async function updatePet (req: Request, res: Response): Promise<void> {
   let updatedPet: object | null = {}
   let petToUpdate: object | null = {}
   let tutorToUpdate: any
-
-  //  tirar o pet antigo e adicionar um novo
 
   try {
     tutorToUpdate = await petModel.findOne({ _id: petId })
@@ -241,7 +230,6 @@ async function updatePet (req: Request, res: Response): Promise<void> {
   res.status(status).json({ success, msg, updatedPet: updatedPet ?? {} })
 }
 
-// TESTADO
 async function deletePet (req: Request, res: Response): Promise<void> {
   const petId = req.params.petId
   const tutorId = req.params.tutorId

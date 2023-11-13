@@ -3,15 +3,11 @@ import app from '../server'
 import tutor from '../model/tutor'
 import mongoose from 'mongoose'
 
-console.clear()
-
 afterAll(async () => {
   await mongoose.connection.close()
 })
 
-// agrupar os grupos por métodos
 describe('CREATE TUTOR', () => {
-  // adicionar um novo tutor com sucesso
   it('Body data is valid. Should return 201 status code', async () => {
     const res = await request(app)
       .post('/api/v1/vetclinic/tutor')
@@ -174,9 +170,7 @@ describe('CREATE PET', () => {
 })
 
 describe('UPDATE PET', () => {
-  // update pet valid
   it("Both tutor's id and pet's body data are valid. Should respond with 200 status code", async () => {
-    console.log('oi')
     const tutor = await request(app).post('/api/v1/vetclinic/tutor').send({
       name: 'Pedro Marques',
       phone: '12345678901',
@@ -197,9 +191,7 @@ describe('UPDATE PET', () => {
       })
 
       if (pet.body.data != null) {
-        console.log('chegou')
         const petId = pet.body.data._id
-        console.log(petId)
 
         const res = await request(app)
           .put(`/api/v1/vetclinic/pet/${petId}/tutor/${tutorId}`)
@@ -288,10 +280,7 @@ describe('DELETE TUTOR', () => {
 })
 
 describe('DELETE PET', () => {
-  // delete successfull
   it("Both pet's id and tutor's are valid. Should respond with 410 status code", async () => {
-    console.clear()
-
     const tutor = await request(app).post('/api/v1/vetclinic/tutor').send({
       name: 'Pedro Marques',
       phone: '12345678901',
@@ -320,7 +309,6 @@ describe('DELETE PET', () => {
     }
   })
 
-  // id not found
   it("Pet's id is valid but not associated with a record. Should respond with 404 status code", async () => {
     const tutor = await request(app).post('/api/v1/vetclinic/tutor').send({
       name: 'Pedro Marques',
@@ -349,7 +337,6 @@ describe('DELETE PET', () => {
     }
   })
 
-  // id invalid
   it("Pet's id format are invalid. Should respond with 500 status code", async () => {
     const tutor = await request(app).post('/api/v1/vetclinic/tutor').send({
       name: 'Pedro Marques',
