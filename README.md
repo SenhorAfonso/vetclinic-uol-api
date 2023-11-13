@@ -16,6 +16,9 @@ All the application was wrote in TypeScript, you'll need to run `tsc -w` in the 
 ## Running the application
 Finally, to start the application all you have to do is run `npm start` in the terminal and wait the "server listening" message to appear.
 
+## Running the test suit
+In order to run the test suits you have to execute the `npx jest __tests__/http_responses.test.ts` command.
+
 # How to use the vet-clinic API?
 
 ## The routes
